@@ -20,7 +20,7 @@ class UserServiceTest {
     @Test
     void searchUsersByTags() {
         List<String> tags = Arrays.asList("Java", "Python");
-        List<User> userList = userService.searchUsersByTags(tags);
+        List<User> userList = userService.searchUsersByTagsByMemory(tags);
         System.out.println("userList = " + userList);
         Assert.notNull(userList);
     }

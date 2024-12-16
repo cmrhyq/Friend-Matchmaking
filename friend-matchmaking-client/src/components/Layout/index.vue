@@ -10,33 +10,23 @@
     </template>
   </van-nav-bar>
   <div id="content">
-    <template v-if="active === 'index'">
-      <Index/>
-    </template>
-    <template v-if="active === 'team'">
-      <Team/>
-    </template>
-    <template v-if="active === 'user'">
-      <User/>
-    </template>
+    <router-view></router-view>
   </div>
-  <van-tabbar v-model="active" @change="tabBarChange">
-    <van-tabbar-item icon="home-o" name="index">主页</van-tabbar-item>
-    <van-tabbar-item icon="friends-o" name="team">队伍</van-tabbar-item>
-    <van-tabbar-item icon="manager-o" name="user">我的</van-tabbar-item>
+  <van-tabbar v-model="active" @change="tabBarChange" route>
+    <van-tabbar-item icon="home-o" name="index" to="/">主页</van-tabbar-item>
+    <van-tabbar-item icon="friends-o" name="team" to="/team">队伍</van-tabbar-item>
+    <van-tabbar-item icon="manager-o" name="user" to="/user">我的</van-tabbar-item>
   </van-tabbar>
 </template>
 
 <script setup lang="ts">
-import { showToast } from 'vant';
 import { ref } from "vue";
 import ConversionTabBarTitle from "../../utils/CommonUtils"
-import Index from "../../pages/Index/index.vue"
-import Team from "../../pages/Team/index.vue"
-import User from "../../pages/User/index.vue"
+import { useRouter } from "vue-router";
 
 const active = ref("index");
 const navbarTitle = ref("主页")
+const router = useRouter()
 
 const tabBarChange = (index) => {
   navbarTitle.value = ConversionTabBarTitle(index)
@@ -44,10 +34,9 @@ const tabBarChange = (index) => {
 
 const onClickLeft = () => {
   history.back()
-  showToast('返回')
 };
 const onClickRight = () => {
-  showToast('搜索')
+  router.push("/search")
 };
 
 </script>

@@ -321,7 +321,7 @@ public class UserController {
     @GetMapping("/test")
     public int test(){
         List<String> tags = Arrays.asList("Java", "Python");
-        List<User> userList = userService.searchUsersByTags(tags);
+        List<User> userList = userService.searchUsersByTagsByMemory(tags);
         System.out.println("userList = " + userList);
         return 0;
     }

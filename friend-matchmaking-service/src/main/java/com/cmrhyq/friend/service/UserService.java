@@ -125,9 +125,16 @@ public interface UserService extends IService<User> {
     User getSafetyUser(User originUser);
 
     /**
-     * 根据标签搜索用户
+     * 根据标签搜索用户，内存处理法
      * @param tags 标签列表
      * @return
      */
-    List<User> searchUsersByTags(List<String> tags);
+    List<User> searchUsersByTagsByMemory(List<String> tags);
+
+    /**
+     * 根据标签搜索用户，Sql处理法
+     * @param tags 标签列表
+     * @return
+     */
+    List<User> searchUsersByTagsBySql(List<String> tags);
 }

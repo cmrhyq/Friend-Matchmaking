@@ -16,9 +16,8 @@ import com.cmrhyq.friend.model.vo.LoginUserVO;
 import com.cmrhyq.friend.model.vo.UserVO;
 import com.cmrhyq.friend.service.UserService;
 import com.cmrhyq.friend.utils.SqlUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
@@ -303,12 +302,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 根据标签搜索用户
+     * 根据标签搜索用户，内存处理法
      * @param tags 标签列表
      * @return
      */
     @Override
-    public List<User> searchUsersByTags(List<String> tags){
+    public List<User> searchUsersByTagsByMemory(List<String> tags){
+        // 方法2
+        if (CollectionUtils.isEmpty(tags)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        List<User> userList = userMapper.selectList(queryWrapper);
+        Gson gson = new Gson();
+        return userList.stream().filter(user -> {
+            String tagStr = user.getTags();
+//            if (StringUtils.isBlank(tagStr)) {
+//                return false;
+//            }
+            Set<String> tempTagList = gson.fromJson(tagStr, new TypeToken<Set<String>>() {}.getType());
+            // 判空操作，可以减少圈复杂度
+            tempTagList = Optional.ofNullable(tempTagList).orElse(new HashSet<>());
+            for(String tag : tempTagList){
+                if(!tempTagList.contains(tag)){
+                    return false;
+                }
+            }
+            return true;
+        }).map(this::getSafetyUser).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据标签搜索用户，Sql处理法
+     * @param tags 标签列表
+     * @return
+     */
+    @Deprecated
+    public List<User> searchUsersByTagsBySql(List<String> tags){
         // 方法1
         if (CollectionUtils.isEmpty(tags)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -319,25 +349,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         List<User> userList = userMapper.selectList(queryWrapper);
         return userList.stream().map(this::getSafetyUser).collect(Collectors.toList());
-        // 方法2
-//        if (CollectionUtils.isEmpty(tags)) {
-//            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-//        }
-//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-//        List<User> userList = userMapper.selectList(queryWrapper);
-//        Gson gson = new Gson();
-//        return userList.stream().filter(user -> {
-//            String tagStr = user.getTags();
-//            if (StringUtils.isBlank(tagStr)) {
-//                return false;
-//            }
-//            Set<String> tempTagList = gson.fromJson(tagStr, new TypeToken<Set<String>>() {}.getType());
-//            for(String tag : tempTagList){
-//                if(!tempTagList.contains(tag)){
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }).map(this::getSafetyUser).collect(Collectors.toList());
     }
 }
