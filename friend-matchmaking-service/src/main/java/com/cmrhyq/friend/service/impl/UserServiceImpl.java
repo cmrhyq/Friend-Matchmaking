@@ -18,13 +18,18 @@ import com.cmrhyq.friend.service.UserService;
 import com.cmrhyq.friend.utils.SqlUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
 /**
@@ -40,6 +45,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 盐值，混淆密码
      */
     public static final String SALT = "yupi";
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -128,7 +138,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 user.setUnionId(unionId);
                 user.setMpOpenId(mpOpenId);
                 user.setUserAvatar(wxOAuth2UserInfo.getHeadImgUrl());
-                user.setUserName(wxOAuth2UserInfo.getNickname());
+                user.setUsername(wxOAuth2UserInfo.getNickname());
                 boolean result = this.save(user);
                 if (!result) {
                     throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败");
@@ -267,5 +277,67 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;
+    }
+
+    /**
+     * 用户脱敏
+     *
+     * @param originUser
+     * @return
+     */
+    @Override
+    public User getSafetyUser(User originUser) {
+        if (originUser == null) {
+            return null;
+        }
+        User safetyUser = new User();
+        safetyUser.setId(originUser.getId());
+        safetyUser.setUsername(originUser.getUsername());
+        safetyUser.setUserAccount(originUser.getUserAccount());
+        safetyUser.setUserAvatar(originUser.getUserAvatar());
+        safetyUser.setUserRole(originUser.getUserRole());
+        safetyUser.setUserStatus(originUser.getUserStatus());
+        safetyUser.setCreateTime(originUser.getCreateTime());
+        safetyUser.setTags(originUser.getTags());
+        return safetyUser;
+    }
+
+    /**
+     * 根据标签搜索用户
+     * @param tags 标签列表
+     * @return
+     */
+    @Override
+    public List<User> searchUsersByTags(List<String> tags){
+        // 方法1
+        if (CollectionUtils.isEmpty(tags)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        for (String tag : tags) {
+            queryWrapper = queryWrapper.like("tags", tag);
+        }
+        List<User> userList = userMapper.selectList(queryWrapper);
+        return userList.stream().map(this::getSafetyUser).collect(Collectors.toList());
+        // 方法2
+//        if (CollectionUtils.isEmpty(tags)) {
+//            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+//        }
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        List<User> userList = userMapper.selectList(queryWrapper);
+//        Gson gson = new Gson();
+//        return userList.stream().filter(user -> {
+//            String tagStr = user.getTags();
+//            if (StringUtils.isBlank(tagStr)) {
+//                return false;
+//            }
+//            Set<String> tempTagList = gson.fromJson(tagStr, new TypeToken<Set<String>>() {}.getType());
+//            for(String tag : tempTagList){
+//                if(!tempTagList.contains(tag)){
+//                    return false;
+//                }
+//            }
+//            return true;
+//        }).map(this::getSafetyUser).collect(Collectors.toList());
     }
 }

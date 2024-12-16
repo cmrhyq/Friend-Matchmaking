@@ -1,7 +1,7 @@
 package com.cmrhyq.friend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cmrhyq.friend.model.dto.tag.Tag;
+import com.cmrhyq.friend.model.entity.Tag;
 
 /**
 * @author AlanHuang

@@ -4,7 +4,7 @@ spring:
     name: aggregated-search-server
   # 默认 dev 环境
   profiles:
-    active: dev
+    active: test
   # 支持 swagger3
   mvc:
     pathmatch:
@@ -52,7 +52,7 @@ server:
         max-age: 2592000
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:

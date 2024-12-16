@@ -2,7 +2,7 @@ package com.cmrhyq.friend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cmrhyq.friend.service.TagService;
-import com.cmrhyq.friend.model.dto.tag.Tag;
+import com.cmrhyq.friend.model.entity.Tag;
 import com.cmrhyq.friend.mapper.TagMapper;
 import org.springframework.stereotype.Service;
 

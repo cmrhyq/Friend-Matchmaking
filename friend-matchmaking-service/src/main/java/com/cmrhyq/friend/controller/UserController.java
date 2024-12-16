@@ -21,6 +21,7 @@ import com.cmrhyq.friend.model.vo.LoginUserVO;
 import com.cmrhyq.friend.model.vo.UserVO;
 import com.cmrhyq.friend.service.UserService;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -315,5 +316,13 @@ public class UserController {
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
+    }
+
+    @GetMapping("/test")
+    public int test(){
+        List<String> tags = Arrays.asList("Java", "Python");
+        List<User> userList = userService.searchUsersByTags(tags);
+        System.out.println("userList = " + userList);
+        return 0;
     }
 }

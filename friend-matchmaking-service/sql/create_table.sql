@@ -15,7 +15,7 @@ create table if not exists user
     user_password VARCHAR(256)                           NOT NULL COMMENT '密码',
     user_status   TINYINT      DEFAULT 0                 NULL COMMENT '是否有效',
     union_id      varchar(256)                           null comment '微信开放平台id',
-    mpOpen_id     varchar(256)                           null comment '公众号openId',
+    mp_open_id     varchar(256)                           null comment '公众号openId',
     user_profile  varchar(512)                           null comment '用户简介',
     user_role     varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
     create_time   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',

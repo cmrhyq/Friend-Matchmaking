@@ -27,7 +27,7 @@ public class User implements Serializable {
     /**
      * 用户昵称
      */
-    private String userName;
+    private String username;
 
     /**
      * 用户账号
@@ -84,6 +84,11 @@ public class User implements Serializable {
      */
     @TableLogic
     private Integer isDelete;
+
+    /**
+     * 标签列表
+     */
+    private String tags;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

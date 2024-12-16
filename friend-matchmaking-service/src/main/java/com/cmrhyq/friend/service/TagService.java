@@ -1,7 +1,7 @@
 package com.cmrhyq.friend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.cmrhyq.friend.model.dto.tag.Tag;
+import com.cmrhyq.friend.model.entity.Tag;
 
 /**
 * @author AlanHuang

@@ -1,4 +1,4 @@
-package com.cmrhyq.friend.model.dto.tag;
+package com.cmrhyq.friend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;

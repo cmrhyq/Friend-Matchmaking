@@ -13,7 +13,6 @@ import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 /**
  * 用户服务
  *
- * @author <a href="https://github.com/cmrhyq">AlanHuang</a>
  */
 public interface UserService extends IService<User> {
 
@@ -117,4 +116,18 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+    /**
+     * 用户脱敏
+     *
+     * @param originUser
+     * @return
+     */
+    User getSafetyUser(User originUser);
+
+    /**
+     * 根据标签搜索用户
+     * @param tags 标签列表
+     * @return
+     */
+    List<User> searchUsersByTags(List<String> tags);
 }
