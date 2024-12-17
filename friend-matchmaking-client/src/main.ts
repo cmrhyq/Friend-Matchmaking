@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import './style.css'
 import 'vant/lib/toast/style'
 import App from './App.vue'
@@ -18,7 +18,7 @@ import {
     Divider,
     Col,
     Row,
-    TreeSelect
+    TreeSelect, Cell, CellGroup, Image as VanImage, Form, Field
 } from 'vant';
 
 const app = createApp(App);
@@ -36,6 +36,11 @@ app.use(Divider);
 app.use(Col);
 app.use(Row);
 app.use(TreeSelect);
+app.use(Cell);
+app.use(CellGroup);
+app.use(VanImage);
+app.use(Form);
+app.use(Field);
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),

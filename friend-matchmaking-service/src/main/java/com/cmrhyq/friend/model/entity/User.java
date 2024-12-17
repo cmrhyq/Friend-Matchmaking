@@ -50,6 +50,16 @@ public class User implements Serializable {
     private Integer userStatus;
 
     /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
      * 开放平台id
      */
     private String unionId;

@@ -60,27 +60,24 @@ let originTagList = [
 ]
 let tagList = ref(originTagList);
 
+const onSearch = (val) => {
+  tagList.value = tagList.value.map(item => {
+    const children = item.children.filter(row => row.text === searchValue.value)
+    return {
+      ...item,
+      children: children,
+    }
+  });
+};
+
 const doClose = (tag) => {
   activeIds.value =  activeIds.value.filter((item) => {
     return item !== tag;
   });
 };
 
-const onSearch = (val) => {
-  tagList.value = originTagList.map(parentTag => {
-    const tempChildren = [...parentTag.children]
-    const tempParentTag = cloneDeep(parentTag)
-    console.log(tempParentTag)
-    tempParentTag.children = tempChildren.filter(item => {
-      console.log(item)
-      item.text.includes(searchValue.value)
-    })
-    return tempParentTag;
-  })
-};
-
 const onCancel = () => {
-  showToast('取消')
+  tagList.value = originTagList
 };
 
 /**
