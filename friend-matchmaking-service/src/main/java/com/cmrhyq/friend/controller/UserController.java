@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
@@ -68,6 +69,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
+    @ApiOperation(value = "用户注册接口")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         if (userRegisterRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -90,6 +92,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
+    @ApiOperation(value = "用户登录接口")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -107,6 +110,7 @@ public class UserController {
      * 用户登录（微信开放平台）
      */
     @GetMapping("/login/wx_open")
+    @ApiOperation(value = "用户登录（微信开放平台）接口")
     public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request, HttpServletResponse response,
             @RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
@@ -133,6 +137,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/logout")
+    @ApiOperation(value = "用户注销接口")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -148,6 +153,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/get/login")
+    @ApiOperation(value = "获取当前登录用户接口")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
@@ -165,6 +171,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/add")
+    @ApiOperation(value = "创建用户接口")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
         if (userAddRequest == null) {
@@ -189,6 +196,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/delete")
+    @ApiOperation(value = "删除用户接口")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
@@ -206,6 +214,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/update")
+    @ApiOperation(value = "更新用户接口")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
             HttpServletRequest request) {
@@ -227,6 +236,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/get")
+    @ApiOperation(value = "根据 id 获取用户（仅管理员）接口")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(long id, HttpServletRequest request) {
         if (id <= 0) {
@@ -245,6 +255,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/get/vo")
+    @ApiOperation(value = "根据 id 获取包装类接口")
     public BaseResponse<UserVO> getUserVOById(long id, HttpServletRequest request) {
         BaseResponse<User> response = getUserById(id, request);
         User user = response.getData();
@@ -259,6 +270,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/list/page")
+    @ApiOperation(value = "分页获取用户列表（仅管理员）接口")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
             HttpServletRequest request) {
@@ -277,6 +289,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/list/page/vo")
+    @ApiOperation(value = "分页获取用户封装列表接口")
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
             HttpServletRequest request) {
         if (userQueryRequest == null) {
@@ -304,6 +317,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/update/my")
+    @ApiOperation(value = "更新个人信息接口")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
             HttpServletRequest request) {
         if (userUpdateMyRequest == null) {
@@ -316,13 +330,5 @@ public class UserController {
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
-    }
-
-    @GetMapping("/test")
-    public int test(){
-        List<String> tags = Arrays.asList("Java", "Python");
-        List<User> userList = userService.searchUsersByTagsByMemory(tags);
-        System.out.println("userList = " + userList);
-        return 0;
     }
 }

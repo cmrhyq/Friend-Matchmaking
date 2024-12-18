@@ -60,6 +60,11 @@ public class User implements Serializable {
     private String email;
 
     /**
+     * 性别
+     */
+    private Integer userGender;
+
+    /**
      * 开放平台id
      */
     private String unionId;

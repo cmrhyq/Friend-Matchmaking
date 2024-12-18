@@ -19,6 +19,7 @@ create table if not exists user
     union_id      varchar(256)                           null comment '微信开放平台id',
     mp_open_id    varchar(256)                           null comment '公众号openId',
     user_profile  varchar(512)                           null comment '用户简介',
+    user_gender   tinyint      default 0                 not null comment '0=男，1=女',
     user_role     varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
     create_time   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',

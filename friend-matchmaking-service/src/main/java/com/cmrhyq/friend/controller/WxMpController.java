@@ -7,6 +7,8 @@ import java.util.Collections;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts.MenuButtonType;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
@@ -39,6 +41,7 @@ public class WxMpController {
     private WxMpMessageRouter router;
 
     @PostMapping("/")
+    @ApiOperation(value = "接收消息接口")
     public void receiveMessage(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         response.setContentType("text/html;charset=utf-8");
@@ -79,6 +82,7 @@ public class WxMpController {
     }
 
     @GetMapping("/")
+    @ApiOperation(value = "微信公众号校验接口")
     public String check(String timestamp, String nonce, String signature, String echostr) {
         log.info("check");
         if (wxMpService.checkSignature(timestamp, nonce, signature)) {
@@ -95,6 +99,7 @@ public class WxMpController {
      * @throws WxErrorException
      */
     @GetMapping("/setMenu")
+    @ApiOperation(value = "设置公众号菜单接口")
     public String setMenu() throws WxErrorException {
         log.info("setMenu");
         WxMenu wxMenu = new WxMenu();
