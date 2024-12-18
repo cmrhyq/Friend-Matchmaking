@@ -12,10 +12,10 @@
       <van-col span="24">
         <van-cell-group inset>
           <van-cell title="用户名" :value="user.username" is-link @click="toEdit('username', '用户名', user.username)"/>
-          <van-cell title="账号名" :value="user.userAccount" is-link to="/user/edit"/>
-          <van-cell title="手机号" :value="user.phone" is-link to="/user/edit"/>
-          <van-cell title="邮箱" :value="user.email" is-link to="/user/edit"/>
-          <van-cell title="性别" :value="user.gender === 1 ? '男' : '女'" is-link to="/user/edit"/>
+          <van-cell title="账号名" :value="user.userAccount" is-link @click="toEdit('userAccount', '账号名', user.userAccount)"/>
+          <van-cell title="手机号" :value="user.phone" is-link  @click="toEdit('phone', '手机号', user.phone)"/>
+          <van-cell title="邮箱" :value="user.email" is-link  @click="toEdit('email', '邮箱', user.email)"/>
+          <van-cell title="性别" :value="user.gender === 1 ? '男' : '女'" is-link  @click="toEdit('gender', '性别', user.gender)"/>
           <van-cell title="角色" :value="user.userRole"/>
           <van-cell title="加入时间" :value="user.createTime.toLocaleString()"/>
         </van-cell-group>
