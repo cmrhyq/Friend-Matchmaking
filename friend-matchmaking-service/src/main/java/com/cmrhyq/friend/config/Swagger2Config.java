@@ -12,8 +12,10 @@ package com.cmrhyq.friend.config;
  * @email cmrhyq@163.com
  * @since v0.0.1
  */
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -28,6 +30,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  */
 @Configuration
 @EnableSwagger2WebMvc
+@Profile({"test", "dev"})
 public class Swagger2Config {
     @Bean(value = "defaultApi2")
     public Docket defaultApi2() {
