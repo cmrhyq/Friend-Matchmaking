@@ -19,7 +19,9 @@
 
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import myAxios from "../../../plugin/myAxios";
+import qs from "qs";
 
 const route = useRoute()
 const tags = route.query.tags
@@ -39,6 +41,18 @@ const mockUser = {
 }
 
 const userList = ref([mockUser])
+
+onMounted(()=>{
+  myAxios.get("/user/search/tags", {
+    params: {
+      tags: tags
+    }
+  }).then(res => {
+    console.log(res)
+  }).catch(err => {
+    console.log(err)
+  })
+})
 
 </script>
 

@@ -9,11 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.7.9",
+    "qs": "^6.13.1",
     "vant": "^4.9.10",
     "vue": "^3.4.37",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.17",
     "@vant/auto-import-resolver": "^1.2.1",
     "@vitejs/plugin-vue": "^5.1.2",
     "typescript": "^5.5.3",
