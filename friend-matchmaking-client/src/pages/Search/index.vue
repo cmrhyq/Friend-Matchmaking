@@ -5,8 +5,11 @@
         show-action
         placeholder="请输入搜索关键词"
         @search="onSearch"
-        @cancel="onCancel"
-    />
+        @clear="onClean">
+      <template #action>
+        <div @click="onSearchToResult">搜索</div>
+      </template>
+    </van-search>
   </form>
   <van-row class="content">
     <van-col span="24" style="padding: 0 2% 0 2%">
@@ -34,7 +37,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const searchValue = ref('');
 // 已选标签
 const activeIds = ref([]);
@@ -60,6 +65,11 @@ let originTagList = [
 ]
 let tagList = ref(originTagList);
 
+/**
+ * 按下enter按钮事件
+ * 重置标签下方的树形选择器
+ * @param val
+ */
 const onSearch = (val) => {
   tagList.value = tagList.value.map(item => {
     const children = item.children.filter(row => row.text === searchValue.value)
@@ -70,33 +80,34 @@ const onSearch = (val) => {
   });
 };
 
+/**
+ * 点击搜索按钮事件
+ */
+const onSearchToResult = () =>{
+  router.push({
+    path: "/search/result",
+    query: {
+      tags: activeIds.value
+    }
+  })
+}
+
+/**
+ * 点击标签关闭事件
+ * @param tag
+ */
 const doClose = (tag) => {
   activeIds.value =  activeIds.value.filter((item) => {
     return item !== tag;
   });
 };
 
-const onCancel = () => {
+/**
+ * 点击搜索框内清除按钮事件
+ */
+const onClean = () => {
   tagList.value = originTagList
 };
-
-/**
- * 深拷贝
- * @param source
- */
-const cloneDeep = (source) => {
-  let target = {};
-  for(let key in source) {
-    if (Object.prototype.hasOwnProperty.call(source, key)) {
-      if (typeof source[key] === 'object') {
-        target[key] = cloneDeep(source[key]); // 注意这里
-      } else {
-        target[key] = source[key];
-      }
-    }
-  }
-  return target;
-}
 
 </script>
 
