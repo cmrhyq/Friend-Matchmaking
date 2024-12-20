@@ -34,6 +34,7 @@ import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -330,5 +331,20 @@ public class UserController {
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
+    }
+
+    /**
+     * 根据标签搜索用户
+     * @param tags
+     * @return
+     */
+    @GetMapping("/search/tags")
+    @ApiOperation(value = "根据标签搜索用户")
+    public BaseResponse<List<User>> searchUsersByTags(@RequestParam(required = false) List<String> tags) {
+        if (CollectionUtils.isEmpty(tags)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        List<User> userList = userService.searchUsersByTagsBySql(tags);
+        return ResultUtils.success(userList);
     }
 }
