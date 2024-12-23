@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
-import myAxios from "../../../plugin/myAxios";
+import myAxios from "../../../plugin/myAxios.ts";
 import {UserType} from "../../../models/user";
 
 const route = useRoute()

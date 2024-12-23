@@ -32,6 +32,22 @@
 
 <script setup lang="ts">
 import {useRouter} from "vue-router";
+import {onMounted} from "vue";
+import {UserType} from "../../models/user";
+import myAxios from "../../plugin/myAxios.ts";
+
+onMounted(async () => {
+  // const requestData: UserType[] = await myAxios.get("/user/search/tags", {
+  //   params: {
+  //     tags: tags
+  //   }
+  // }).then(res => {
+  //   console.log(res)
+  //   return res.data?.data;
+  // }).catch(err => {
+  //   console.log(err)
+  // })
+})
 
 const user = {
   id: 1,
