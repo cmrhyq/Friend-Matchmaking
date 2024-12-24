@@ -31,3 +31,25 @@ export function cloneDeep(source){
     }
     return target;
 }
+
+/**
+ * 格式化标准时间
+ * @param time "2024-12-24T05:06:42.000+00:00"
+ */
+export const formatStandTime = (time: string) => {
+    let date = new Date(time);
+    // 使用 `Intl.DateTimeFormat` 来格式化日期
+    let formatter = new Intl.DateTimeFormat('zh-cn', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,  // 使用24小时制
+    });
+
+    let formattedTime = formatter.format(date);
+    console.log(formattedTime);
+    return formattedTime;
+}
