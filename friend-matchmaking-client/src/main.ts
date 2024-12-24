@@ -1,6 +1,7 @@
 import {createApp} from 'vue'
 import './style.css'
 import 'vant/lib/toast/style'
+import 'vant/lib/notify/style'
 import App from './App.vue'
 import routes from "./config/route.ts";
 import * as VueRouter from 'vue-router';
@@ -18,7 +19,7 @@ import {
     Divider,
     Col,
     Row,
-    TreeSelect, Cell, CellGroup, Image as VanImage, Form, Field
+    TreeSelect, Cell, CellGroup, Image as VanImage, Form, Field, Notify
 } from 'vant';
 
 const app = createApp(App);
@@ -41,6 +42,7 @@ app.use(CellGroup);
 app.use(VanImage);
 app.use(Form);
 app.use(Field);
+app.use(Notify);
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
