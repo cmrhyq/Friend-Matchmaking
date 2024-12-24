@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import {ConversionTabBarTitle} from "../../utils/CommonUtils"
+import {ConversionTabBarTitle} from "../../utils/CommonUtils.ts"
 import { useRouter } from "vue-router";
 
 const active = ref("index");
