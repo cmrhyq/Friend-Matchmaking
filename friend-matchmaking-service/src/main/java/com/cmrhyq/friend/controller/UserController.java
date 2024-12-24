@@ -144,13 +144,13 @@ public class UserController {
     }
 
     /**
-     * 获取当前登录用户
+     * 获取当前登录用户信息
      *
      * @param request
      * @return
      */
     @GetMapping("/get/login")
-    @ApiOperation(value = "获取当前登录用户接口")
+    @ApiOperation(value = "获取当前登录用户信息接口")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));

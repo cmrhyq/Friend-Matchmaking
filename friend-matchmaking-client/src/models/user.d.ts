@@ -6,11 +6,16 @@ export type UserType = {
     username: string;
     userAccount: string;
     userAvatar?: string;
-    gender: number;
+    userGender: number;
     userStatus: number;
     phone: string;
     email: string;
     userRole: number;
     tags: string[];
     createTime: Date;
+}
+
+export type userLogin = {
+    userAccount: string;
+    userPassword: string;
 }
