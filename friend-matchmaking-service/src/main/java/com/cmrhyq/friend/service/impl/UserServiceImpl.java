@@ -50,6 +50,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         this.userMapper = userMapper;
     }
 
+    /**
+     * 用户注册
+     * @param userAccount   用户账户
+     * @param userPassword  用户密码
+     * @param checkPassword 校验密码
+     * @return
+     */
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
         // 1. 校验
@@ -88,6 +95,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    /**
+     * 用户登录
+     * @param userAccount  用户账户
+     * @param userPassword 用户密码
+     * @param request
+     * @return
+     */
     @Override
     public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
@@ -117,6 +131,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return this.getLoginUserVO(user);
     }
 
+    /**
+     * 微信登录
+     * @param wxOAuth2UserInfo 从微信获取的用户信息
+     * @param request
+     * @return
+     */
     @Override
     public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo, HttpServletRequest request) {
         String unionId = wxOAuth2UserInfo.getUnionId();
