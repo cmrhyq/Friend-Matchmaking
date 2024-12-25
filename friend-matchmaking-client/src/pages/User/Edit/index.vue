@@ -37,11 +37,11 @@ const onSubmit = async () => {
   myAxios.post('/user/update/my', {
     [updateKey as string]: updateValue
   }).then(res => {
-    if (res.data.code === 0) {
+    if (res.code === 0) {
       showSuccessToast("修改成功")
       router.back()
     } else {
-      showFailToast(res.data.message)
+      showFailToast(res.message)
     }
   }).catch(err => {
     console.log(err)

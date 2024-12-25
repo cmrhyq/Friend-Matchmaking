@@ -53,11 +53,12 @@ const router = useRouter()
 
 onMounted(async () => {
   myAxios.get("/user/get/login", {}).then(res => {
-    if (res.data.code === 40100) {
-      showFailToast(res.data.message);
+    console.log(res)
+    if (res.code === 40100) {
+      showFailToast(res.message);
       router.push("/user/login")
     } else {
-      user.value = res.data.data
+      user.value = res.data
     }
   }).catch(err => {
     console.log(err)
@@ -70,7 +71,7 @@ onMounted(async () => {
  */
 const logout = () => {
   myAxios.post("/user/logout", {}).then(res => {
-    if (res.data.code === 0){
+    if (res.code === 0){
       showSuccessToast("退出成功")
       router.push("/")
     }

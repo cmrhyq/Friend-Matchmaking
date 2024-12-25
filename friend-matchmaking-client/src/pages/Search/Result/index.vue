@@ -36,7 +36,7 @@ onMounted(async ()=>{
     }
   }).then(res => {
     console.log(res)
-    return res.data?.data;
+    return res.data;
   }).catch(err => {
     console.log(err)
   })
