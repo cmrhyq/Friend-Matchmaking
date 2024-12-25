@@ -1,6 +1,6 @@
 <template>
   <div class="user-content-box">
-    <van-row>
+    <van-row v-if="user">
       <van-col span="8" offset="8">
         <van-image
             round
@@ -36,18 +36,10 @@ import {useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import myAxios from "../../plugin/myAxios.ts";
 import {showFailToast, showSuccessToast} from "vant";
-import {formatStandTime} from "../../utils/CommonUtils.ts";
+import {formatStandTime} from "../../utils/commonUtils.ts";
+import {getCurrentUser} from "../../api/user.ts";
 
-const user = ref({
-  id: 1,
-  username: "黄昱桥",
-  userAccount: "AlanHuang",
-  userAvatar: "https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg",
-  userGender: 1,
-  phone: "18164038469",
-  email: "cmr@163.com",
-  createTime: new Date(),
-})
+const user = ref()
 
 const router = useRouter()
 
@@ -64,6 +56,7 @@ onMounted(async () => {
     console.log(err)
     showFailToast("系统异常")
   })
+  // user.value = await getCurrentUser()
 })
 
 /**

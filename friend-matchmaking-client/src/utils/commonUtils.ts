@@ -48,8 +48,5 @@ export const formatStandTime = (time: string) => {
         second: '2-digit',
         hour12: false,  // 使用24小时制
     });
-
-    let formattedTime = formatter.format(date);
-    console.log(formattedTime);
-    return formattedTime;
+    return formatter.format(date);
 }
