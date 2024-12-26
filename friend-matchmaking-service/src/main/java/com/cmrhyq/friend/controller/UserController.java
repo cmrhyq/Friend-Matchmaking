@@ -1,5 +1,6 @@
 package com.cmrhyq.friend.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cmrhyq.friend.annotation.AuthCheck;
 import com.cmrhyq.friend.common.BaseResponse;
@@ -23,6 +24,7 @@ import com.cmrhyq.friend.service.UserService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -342,5 +344,19 @@ public class UserController {
         }
         List<User> userList = userService.searchUsersByTagsBySql(tags);
         return ResultUtils.success(userList);
+    }
+
+    /**
+     * 主页推荐接口
+     * @param request
+     * @return
+     */
+    @GetMapping("/recommend")
+    @ApiOperation(value = "主页推荐接口")
+    public BaseResponse<List<User>> recommendUser(HttpServletRequest request) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        List<User> userList = userService.list(queryWrapper);
+        List<User> list = userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
+        return ResultUtils.success(list);
     }
 }
