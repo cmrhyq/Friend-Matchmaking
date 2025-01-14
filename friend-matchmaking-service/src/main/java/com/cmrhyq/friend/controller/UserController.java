@@ -1,6 +1,7 @@
 package com.cmrhyq.friend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cmrhyq.friend.annotation.AuthCheck;
 import com.cmrhyq.friend.common.BaseResponse;
@@ -111,7 +112,7 @@ public class UserController {
     @GetMapping("/login/wx_open")
     @ApiOperation(value = "用户登录（微信开放平台）接口")
     public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam("code") String code) {
+                                                       @RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
         try {
             WxMpService wxService = wxOpenConfig.getWxMpService();
@@ -216,7 +217,7 @@ public class UserController {
     @ApiOperation(value = "更新用户接口")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-            HttpServletRequest request) {
+                                            HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -272,7 +273,7 @@ public class UserController {
     @ApiOperation(value = "分页获取用户列表（仅管理员）接口")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                   HttpServletRequest request) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size),
@@ -290,7 +291,7 @@ public class UserController {
     @PostMapping("/list/page/vo")
     @ApiOperation(value = "分页获取用户封装列表接口")
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                       HttpServletRequest request) {
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -318,7 +319,7 @@ public class UserController {
     @PostMapping("/update/my")
     @ApiOperation(value = "更新个人信息接口")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+                                              HttpServletRequest request) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -333,6 +334,7 @@ public class UserController {
 
     /**
      * 根据标签搜索用户
+     *
      * @param tags
      * @return
      */
@@ -348,15 +350,17 @@ public class UserController {
 
     /**
      * 主页推荐接口
+     *
+     * @param pageSize
+     * @param pageNumber
      * @param request
      * @return
      */
     @GetMapping("/recommend")
     @ApiOperation(value = "主页推荐接口")
-    public BaseResponse<List<User>> recommendUser(HttpServletRequest request) {
+    public BaseResponse<Page<User>> recommendUser(long pageSize, long pageNumber,HttpServletRequest request) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        List<User> userList = userService.list(queryWrapper);
-        List<User> list = userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
-        return ResultUtils.success(list);
+        Page<User> userList = userService.page(new Page<>(pageNumber, pageSize), queryWrapper);
+        return ResultUtils.success(userList);
     }
 }
