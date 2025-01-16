@@ -25,6 +25,7 @@ import com.cmrhyq.friend.service.UserService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,10 +38,13 @@ import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
+import static com.cmrhyq.friend.constant.CommonConstant.SYSTEM_REDIS_KEY;
 import static com.cmrhyq.friend.service.impl.UserServiceImpl.SALT;
 
 /**
@@ -59,6 +63,9 @@ public class UserController {
 
     @Resource
     private WxOpenConfig wxOpenConfig;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     // region 登录相关
 
@@ -359,8 +366,23 @@ public class UserController {
     @GetMapping("/recommend")
     @ApiOperation(value = "主页推荐接口")
     public BaseResponse<Page<User>> recommendUser(long pageSize, long pageNumber,HttpServletRequest request) {
+        User user = userService.getLoginUser(request);
+        String redisKey = String.format(SYSTEM_REDIS_KEY + ":user:recommend:%s", user.getId());
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        // 看是否有缓存，如果有就直接用缓存
+        Page<User> userPage = (Page<User>) valueOperations.get(redisKey);
+        if (userPage != null) {
+            return ResultUtils.success(userPage);
+        }
+        // 没有缓存则查数据库
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        Page<User> userList = userService.page(new Page<>(pageNumber, pageSize), queryWrapper);
-        return ResultUtils.success(userList);
+        userPage = userService.page(new Page<>(pageNumber, pageSize), queryWrapper);
+        // 顺便写到缓存里
+        try {
+            valueOperations.set(redisKey, userPage, 300000, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            log.error("Redis set key error", e);
+        }
+        return ResultUtils.success(userPage);
     }
 }

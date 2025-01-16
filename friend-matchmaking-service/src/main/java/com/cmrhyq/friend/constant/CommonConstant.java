@@ -16,5 +16,15 @@ public interface CommonConstant {
      * 降序
      */
     String SORT_ORDER_DESC = " descend";
+
+    /**
+     * redis的系统key前缀
+     */
+    String SYSTEM_REDIS_KEY = "friend-matchmaking";
+
+    /**
+     * redis的key过期时间
+     */
+    String REDIS_EXPIRED_TIME = "30000";
     
 }
