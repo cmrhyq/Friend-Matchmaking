@@ -366,8 +366,7 @@ public class UserController {
     @GetMapping("/recommend")
     @ApiOperation(value = "主页推荐接口")
     public BaseResponse<Page<User>> recommendUser(long pageSize, long pageNumber,HttpServletRequest request) {
-        User user = userService.getLoginUser(request);
-        String redisKey = String.format(SYSTEM_REDIS_KEY + ":user:recommend:%s", user.getId());
+        String redisKey = SYSTEM_REDIS_KEY + ":user:recommend";
         ValueOperations valueOperations = redisTemplate.opsForValue();
         // 看是否有缓存，如果有就直接用缓存
         Page<User> userPage = (Page<User>) valueOperations.get(redisKey);
@@ -379,7 +378,7 @@ public class UserController {
         userPage = userService.page(new Page<>(pageNumber, pageSize), queryWrapper);
         // 顺便写到缓存里
         try {
-            valueOperations.set(redisKey, userPage, 300000, TimeUnit.MILLISECONDS);
+            valueOperations.set(redisKey, userPage, 1, TimeUnit.DAYS);
         } catch (Exception e) {
             log.error("Redis set key error", e);
         }
