@@ -365,7 +365,7 @@ public class UserController {
      */
     @GetMapping("/recommend")
     @ApiOperation(value = "主页推荐接口")
-    public BaseResponse<Page<User>> recommendUser(long pageSize, long pageNumber,HttpServletRequest request) {
+    public BaseResponse<Page<User>> recommendUser(long pageSize, long pageNumber, HttpServletRequest request) {
         String redisKey = SYSTEM_REDIS_KEY + ":user:recommend";
         ValueOperations valueOperations = redisTemplate.opsForValue();
         // 看是否有缓存，如果有就直接用缓存
