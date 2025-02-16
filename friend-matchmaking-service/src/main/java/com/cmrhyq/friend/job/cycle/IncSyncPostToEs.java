@@ -28,23 +28,5 @@ import static com.cmrhyq.friend.constant.CommonConstant.SYSTEM_REDIS_KEY;
 @Component
 public class IncSyncPostToEs {
 
-    @Resource
-    private UserService userService;
 
-    @Resource
-    private RedisTemplate redisTemplate;
-
-    @Scheduled(cron = "0 30 01 * * ?")
-    public void doCacheRecommendUser(){
-        String redisKey = SYSTEM_REDIS_KEY + ":user:recommend";
-        ValueOperations valueOperations = redisTemplate.opsForValue();
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        Page<User> userPage = userService.page(new Page<>(1, 20), queryWrapper);
-        // 写缓存
-        try {
-            valueOperations.set(redisKey, userPage, 1, TimeUnit.DAYS);
-        } catch (Exception e) {
-            log.error("Redis set key error", e);
-        }
-    }
 }

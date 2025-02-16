@@ -23,6 +23,11 @@ public interface CommonConstant {
     String SYSTEM_REDIS_KEY = "friend-matchmaking";
 
     /**
+     * 任务的分布式锁
+     */
+    String PRE_CACHE_JOB_LOCK = String.format("%s:precachejob:docache:lock", SYSTEM_REDIS_KEY);
+
+    /**
      * redis的key过期时间
      */
     String REDIS_EXPIRED_TIME = "30000";
