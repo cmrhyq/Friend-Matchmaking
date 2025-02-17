@@ -44,15 +44,16 @@ public class PreCacheJob {
     @Resource
     private RedissonClient redissonClient;
 
-    @Scheduled(cron = "0 30 01 * * ?")
+    @Scheduled(cron = "0 15 11 * * ?")
     public void doCacheRecommendUser() throws InterruptedException {
         RLock lock = redissonClient.getLock(PRE_CACHE_JOB_LOCK);
         try {
             // 加锁, 30s后自动释放锁,只有一个线程可以获取锁
             // waitTime 设置成 0 表示立即获取锁，只抢一次， 抢不到就返回 false
             // waitTime 等待时间, leaseTime 锁过期时间, 单位: 毫秒
-            if (lock.tryLock(0, 30000L, TimeUnit.MILLISECONDS)){
-                System.out.println("获取到锁: " + Thread.currentThread().getId());
+            // leaseTime 设置成 -1 表示锁不自动过期，直到主动释放锁
+            if (lock.tryLock(0, -1, TimeUnit.MILLISECONDS)){
+                log.info("获取到锁: {}", Thread.currentThread().getId());
                 String redisKey = SYSTEM_REDIS_KEY + ":user:recommend";
                 ValueOperations valueOperations = redisTemplate.opsForValue();
                 QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -63,13 +64,15 @@ public class PreCacheJob {
                 } catch (Exception e) {
                     log.error("Redis set key error: ", e);
                 }
+            } else {
+                log.info("获取锁失败: {}", Thread.currentThread().getId());
             }
         } catch (InterruptedException e) {
             log.error("Redis job error: ", e);
         } finally {
             // 释放锁
             if (lock.isHeldByCurrentThread()){
-                System.out.println("释放锁: " + Thread.currentThread().getId());
+                log.info("释放锁: {}", Thread.currentThread().getId());
                 lock.unlock();
             }
         }
